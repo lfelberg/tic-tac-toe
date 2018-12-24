@@ -2,6 +2,7 @@
 class Board {
   constructor(names, nSquares = 3) {
     this.n = nSquares;
+    this.board = [];
     this.placed = 0;
     this.player = 0;
     this.names = names.concat();
@@ -9,32 +10,35 @@ class Board {
     this.constructBoard();
   }
 
+  getPlayer() {
+    return this.names[this.player];
+  }
+
+  getBoard() {
+    return this.board;
+  }
+
   constructBoard() {
     this.board = [];
     for (let i = 0; i < this.n; i += 1) {
       const row = [];
       for (let j = 0; j < this.n; j += 1) {
-        row.push('');
+        row.push(' ');
       }
       this.board.push(row);
     }
   }
 
-  placePiece(row, col) {
-    if (this.isValidPosition()) {
-      console.log('Spot taken, try again!');
-      return;
-    }
-
-    this.board[row][col] = (this.player === 0) ? 'X' : 'O';
-
+  isOver() {
     if (this.checkTie()) {
       this.message = 'Cats game!';
-    } else if (this.checkWin()) {
-      this.message = `Player ${this.player + 1} wins!!`;
-    } else {
-      this.switchTurns();
+      return true;
     }
+    if (this.checkWin()) {
+      this.message = `${this.names[this.player]} wins!!`;
+      return true;
+    }
+    return false;
   }
 
   isOutsideBounds(row, col) {
@@ -42,10 +46,10 @@ class Board {
   }
 
   isOccupied(row, col) {
-    if (this.board[row][col] !== '') {
-      return false;
+    if (this.board[row][col] !== ' ') {
+      return true;
     }
-    return true;
+    return false;
   }
 
   isValidPosition(row, col) {
@@ -53,14 +57,14 @@ class Board {
   }
 
   switchTurns() {
-    this.player = (this.player + 1) % 1;
+    this.player = (this.player + 1) % 2;
   }
 
   checkRowsWin() {
     for (let i = 0; i < this.n; i += 1) {
       const current = this.board[i][0];
       for (let j = 1; j < this.n; j += 1) {
-        if ((current === '') || current !== this.board[i][j]) {
+        if ((current === ' ') || current !== this.board[i][j]) {
           return false;
         }
       }
@@ -72,7 +76,7 @@ class Board {
     for (let i = 0; i < this.n; i += 1) {
       const current = this.board[0][i];
       for (let j = 1; j < this.n; j += 1) {
-        if ((current === '') || current !== this.board[j][i]) {
+        if ((current === ' ') || current !== this.board[j][i]) {
           return false;
         }
       }
@@ -83,7 +87,7 @@ class Board {
   checkMinorDiag() {
     const current = this.board[0][this.n - 1];
     for (let i = 1; i < this.n; i += 1) {
-      if ((current === '') || current !== this.board[i][this.n - 1 - i]) {
+      if ((current === ' ') || current !== this.board[i][this.n - 1 - i]) {
         return false;
       }
     }
@@ -93,7 +97,7 @@ class Board {
   checkMajorDiag() {
     const current = this.board[0][0];
     for (let i = 1; i < this.n; i += 1) {
-      if ((current === '') || current !== this.board[i][i]) {
+      if ((current === ' ') || current !== this.board[i][i]) {
         return false;
       }
     }
@@ -110,6 +114,22 @@ class Board {
 
   checkWin() {
     return (this.checkRowsWin() || this.checkColsWin() || this.checkDiagsWin());
+  }
+
+  placePiece(row, col) {
+    if (this.isValidPosition(row, col)) {
+      console.log('Spot taken, try again!');
+      return false;
+    }
+
+    this.board[row][col] = (this.player === 0) ? 'X' : 'O';
+
+    if (this.isOver()) {
+      console.log(this.message);
+      return true;
+    }
+    this.switchTurns();
+    return false;
   }
 }
 

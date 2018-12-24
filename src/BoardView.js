@@ -2,9 +2,9 @@ module.exports = (board) => {
   let maxLen = 0;
   const rows = [];
   board.forEach((row) => {
-    rows.push(row.join(' | '));
-    if (rows[row.length - 1].length > maxLen) {
-      maxLen = rows[row.length - 1].length;
+    rows.push(`${row.join(' | ')}\n`);
+    if (rows[rows.length - 1].length > maxLen) {
+      maxLen = rows[rows.length - 1].length;
     }
   });
   let joiner = '';
@@ -13,5 +13,5 @@ module.exports = (board) => {
   }
   joiner += '\n';
 
-  return rows.join(joiner);
+  console.log(rows.join(joiner));
 };
