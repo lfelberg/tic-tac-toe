@@ -2,10 +2,6 @@ const readline = require('readline');
 const Board = require('./src/Board.js');
 const boardView = require('./src/BoardView.js');
 
-// construct BoardView, Board
-// While the game is not over, keep prompting for inputs
-// when game is over, user can input R to reset game
-
 const rl = readline.createInterface({
   input: process.stdin,
   output: process.stdout,
@@ -17,7 +13,7 @@ const askQuestion = (q, cb) => {
   });
 };
 
-const parsePosition = pos => pos.split(',').map(s => Number(s));
+const parsePosition = pos => pos.split(',').map(s => Number(s) - 1);
 
 const parsePlaceView = (pos, board) => {
   const position = parsePosition(pos);
@@ -32,9 +28,9 @@ const parsePlaceView = (pos, board) => {
 };
 
 const names = [];
-
 const runGame = () => {
   const board = new Board(names);
+  boardView(board.getBoard());
   askQuestion(`Place a piece, ${board.getPlayer()} (row, col) > `,
     pos => parsePlaceView(pos, board));
 };

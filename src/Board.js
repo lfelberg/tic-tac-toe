@@ -61,27 +61,30 @@ class Board {
   }
 
   checkRowsWin() {
-    for (let i = 0; i < this.n; i += 1) {
+    let wins = false;
+    outer: for (let i = 0; i < this.n; i += 1) {
       const current = this.board[i][0];
       for (let j = 1; j < this.n; j += 1) {
         if ((current === ' ') || current !== this.board[i][j]) {
-          return false;
+          continue outer;
         }
       }
     }
-    return true;
+    return wins;
   }
 
   checkColsWin() {
-    for (let i = 0; i < this.n; i += 1) {
+    let wins = false;
+    outer: for (let i = 0; i < this.n; i += 1) {
       const current = this.board[0][i];
       for (let j = 1; j < this.n; j += 1) {
         if ((current === ' ') || current !== this.board[j][i]) {
-          return false;
+          continue outer;
         }
       }
+      wins = true;
     }
-    return true;
+    return wins;
   }
 
   checkMinorDiag() {
